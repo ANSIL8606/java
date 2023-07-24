@@ -1,0 +1,58 @@
+---
+> db.createUser({user:"reportsUser",pwd:passwordPrompt(),roles:[]}
+... ^C
+
+> db.createUser({user:"appAdmin",pwd:passwordPrompt(),roles:[{role:"readWrite",db:"config"}]})
+Enter password:
+Successfully added user: {
+        "user" : "appAdmin",
+        "roles" : [
+                {
+                        "role" : "readWrite",
+                        "db" : "config"
+                }
+        ]
+}
+> db.createUser({user:"restricted",pwd:passwordPrompt(),roles:[{role:"readWrite",db:"reporting"}],authenticationRestrictions:[{clientSource:["192.0.2.0"],serverAddress:["198.51.100.0"]}]})
+Enter password:
+Successfully added user: {
+        "user" : "restricted",
+        "roles" : [
+                {
+                        "role" : "readWrite",
+                        "db" : "reporting"
+                }
+        ],
+        "authenticationRestrictions" : [
+                {
+                        "clientSource" : [
+                                "192.0.2.0"
+                        ],
+                        "serverAddress" : [
+                                "198.51.100.0"
+                        ]
+                }
+        ]
+}
+> db.dropUser("reportsUser",{w:"majority",wtimeout:5000})
+false
+> db.getUser("appAdmin")
+{
+        "_id" : "test.appAdmin",
+        "userId" : UUID("c70e5aa3-b885-41a6-a718-a75ae2edbace"),
+        "user" : "appAdmin",
+        "db" : "test",
+        "roles" : [
+                {
+                        "role" : "readWrite",
+                        "db" : "config"
+                }
+        ],
+        "mechanisms" : [
+                "SCRAM-SHA-1",
+                "SCRAM-SHA-256"
+        ]
+}
+> db.grantRolesToUser("appAdmin",["readWrite",{role:"read",db:"student"}],{w:"majority",wtimeout:4000})
+> db.revokeRolesFromUser("appAdmin",[{role:"read",db:"student"},"readWrite"],{w:"majority"})
+>

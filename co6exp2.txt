@@ -1,0 +1,1 @@
+This is experiment 2 of CO6.This is my file content to be written to the text file.
